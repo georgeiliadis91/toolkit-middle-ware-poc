@@ -7,7 +7,6 @@ const EventSubscriber: React.FC = () => {
 
   useEffect(() => {
     const token = PubSub.subscribe(EVENTS.DIFF, (_, data: string[]) => {
-      console.log("new diff:", data);
       setEvents(data);
     });
 

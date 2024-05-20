@@ -24,6 +24,7 @@ const fetchPostsMiddleware: Middleware<
   ApiState,
   ThunkDispatch<ApiState, ExtraArg, UnknownAction>
 > = (store) => (next) => (action) => {
+
   // Check if the action is one of the actions we're interested in
   // to run on the middleware else ignore it
   const isIncludedInMiddleware = isAnyOf(
