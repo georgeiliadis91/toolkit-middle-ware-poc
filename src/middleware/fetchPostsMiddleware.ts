@@ -26,12 +26,12 @@ const slices = {
 };
 
 type ApiState = {
-  // Include RTK Query API reducers
+  // RTK Query reducers
   [K in keyof typeof apis as (typeof apis)[K]["reducerPath"]]: ReturnType<
     (typeof apis)[K]["reducer"]
   >;
 } & {
-  // Include slice reducers
+  // Slice reducers
   [K in keyof typeof slices]: ReturnType<(typeof slices)[K]>;
 };
 
