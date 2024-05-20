@@ -3,7 +3,7 @@ import { postsApi } from "../api/postsApi";
 import { UnknownAction } from "@reduxjs/toolkit";
 import postsSlice from "../store/posts/postsSlice";
 import { setPosts } from "../store/posts/postsSlice";
-import { ExtraArg } from "../store/store"; // Import the ExtraArg type from the appropriate package
+import { ExtraArg, RootState } from "../store/store"; // Import the ExtraArg type from the appropriate package
 import { fetchPosts, stopPolling } from "../store/posts/postsSlice";
 import PubSub from "pubsub-js";
 import { EVENTS } from "../utils/eventEmitter";
@@ -17,35 +17,37 @@ let intervalId: number | null | undefined = null;
 //   posts: ReturnType<typeof postsSlice>;
 // };
 
-const apis = {
-  postsApi,
-};
+// const apis = {
+//   postsApi,
+// };
 
-const slices = {
-  posts: postsSlice,
-};
+// const slices = {
+//   posts: postsSlice,
+// };
 
-type ApiState = {
-  // RTK Query reducers
-  [K in keyof typeof apis as (typeof apis)[K]["reducerPath"]]: ReturnType<
-    (typeof apis)[K]["reducer"]
-  >;
-} & {
-  // Slice reducers
-  [K in keyof typeof slices]: ReturnType<(typeof slices)[K]>;
-};
+// type ApiState = {
+//   // RTK Query reducers
+//   [K in keyof typeof apis as (typeof apis)[K]["reducerPath"]]: ReturnType<
+//     (typeof apis)[K]["reducer"]
+//   >;
+// } & {
+//   // Slice reducers
+//   [K in keyof typeof slices]: ReturnType<(typeof slices)[K]>;
+// };
 
 const fetchPostsMiddleware: Middleware<
   // eslint-disable-next-line @typescript-eslint/ban-types
   {},
-  ApiState,
-  ThunkDispatch<ApiState, ExtraArg, UnknownAction>
+  RootState,
+  ThunkDispatch<RootState, ExtraArg, UnknownAction>
 > = (store) => (next) => (action) => {
   // Check if the action is one of the actions we're interested in
   // to run on the middleware else ignore it
   const isIncludedInMiddleware = isAnyOf(
     fetchPosts,
     postsApi.endpoints.getPosts.matchFulfilled,
+    postsApi.endpoints.getPosts.matchRejected,
+    postsApi.endpoints.getPosts.matchPending,
     stopPolling
   );
 
