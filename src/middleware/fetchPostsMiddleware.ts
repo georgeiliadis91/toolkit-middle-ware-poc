@@ -11,6 +11,8 @@ const POLLING_INTERVAL = 2_000;
 
 let intervalId: number | null | undefined = null;
 
+
+//@todo: figure out how to extract the state type
 type ApiState = Record<
   typeof postsApi.reducerPath,
   ReturnType<typeof postsApi.reducer>
@@ -35,6 +37,7 @@ const fetchPostsMiddleware: Middleware<
   }
 
   if (fetchPosts.match(action)) {
+    // figure out hwo to fix the types here
     const state = store.getState();
     const shouldFetchPosts = state.posts.items.length === 0;
 
