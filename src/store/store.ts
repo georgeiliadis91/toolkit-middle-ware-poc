@@ -15,9 +15,9 @@ const store = configureStore({
     getDefaultMiddleware().prepend(postsApi.middleware, fetchPostsMiddleware),
 });
 
-export type RootState = ReturnType<typeof rootReducer>; 
-export type ExtraArg = { postsApi: typeof postsApi };
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
+export type ExtraArg = undefined; // Update this if we even start passing extra args on the middleware
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
