@@ -1,6 +1,7 @@
 import { isAnyOf, Middleware, ThunkDispatch } from "@reduxjs/toolkit";
 import { postsApi } from "../api/postsApi";
 import { UnknownAction } from "@reduxjs/toolkit";
+import postsSlice from "../store/posts/postsSlice";
 import { setPosts } from "../store/posts/postsSlice";
 import { ExtraArg } from "../store/store"; // Import the ExtraArg type from the appropriate package
 import { fetchPosts, stopPolling } from "../store/posts/postsSlice";
@@ -11,12 +12,28 @@ const POLLING_INTERVAL = 2_000;
 
 let intervalId: number | null | undefined = null;
 
+// type ApiState = {
+//   [postsApi.reducerPath]: ReturnType<typeof postsApi.reducer>;
+//   posts: ReturnType<typeof postsSlice>;
+// };
 
-//@todo: figure out how to extract the state type
-type ApiState = Record<
-  typeof postsApi.reducerPath,
-  ReturnType<typeof postsApi.reducer>
->;
+const apis = {
+  postsApi,
+};
+
+const slices = {
+  posts: postsSlice,
+};
+
+type ApiState = {
+  // Include RTK Query API reducers
+  [K in keyof typeof apis as (typeof apis)[K]["reducerPath"]]: ReturnType<
+    (typeof apis)[K]["reducer"]
+  >;
+} & {
+  // Include slice reducers
+  [K in keyof typeof slices]: ReturnType<(typeof slices)[K]>;
+};
 
 const fetchPostsMiddleware: Middleware<
   // eslint-disable-next-line @typescript-eslint/ban-types
@@ -24,7 +41,6 @@ const fetchPostsMiddleware: Middleware<
   ApiState,
   ThunkDispatch<ApiState, ExtraArg, UnknownAction>
 > = (store) => (next) => (action) => {
-
   // Check if the action is one of the actions we're interested in
   // to run on the middleware else ignore it
   const isIncludedInMiddleware = isAnyOf(
@@ -41,7 +57,6 @@ const fetchPostsMiddleware: Middleware<
     // figure out hwo to fix the types here
     const state = store.getState();
     const shouldFetchPosts = state.posts.items.length === 0;
-
     if (shouldFetchPosts) {
       const { userId } = action.payload;
       store.dispatch(postsApi.endpoints.getPosts.initiate(userId));
