@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
+    "pubsub-js": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.2"
   },
   "devDependencies": {
+    "@types/pubsub-js": "^1.8.6",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
