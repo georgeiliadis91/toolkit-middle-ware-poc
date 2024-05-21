@@ -1,12 +1,15 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { postsApi } from "../api/postsApi";
-import postsSlice from "./posts/postsSlice";
+import userSlice from "./user/userSlice";
+import loaderSlice from "./loader/loaderSlice";
 import fetchPostsMiddleware from "../middleware/fetchPostsMiddleware";
 import { useDispatch, useSelector } from "react-redux";
 
+// Extract type before we assign it on the store to avoid circular type deps
 const rootReducer = combineReducers({
   [postsApi.reducerPath]: postsApi.reducer,
-  posts: postsSlice,
+  user: userSlice,
+  loader: loaderSlice,
 });
 
 const store = configureStore({
