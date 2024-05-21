@@ -85,7 +85,11 @@ const fetchPostsMiddleware: Middleware<
       if (state.postsApi.queries[`getPosts(${state.user})`]?.data) {
         store.dispatch(setIsNotLoading());
       } else {
-        store.dispatch(setIsLoading());
+        // check if the loader is already set to false to avoid
+        // dispatching the action multiple times
+        if (state.loader === false) {
+          store.dispatch(setIsLoading());
+        }
       }
       break;
     }
